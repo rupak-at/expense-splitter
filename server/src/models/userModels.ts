@@ -1,7 +1,9 @@
+import { required } from "joi";
 import mongoose from "mongoose";
 
 interface IUser extends mongoose.Document {
     fullName: string;
+    userName: String;
     email: string;
     password: string;
     groups?: mongoose.Schema.Types.ObjectId[];
@@ -12,7 +14,12 @@ const userSchema: mongoose.Schema<IUser> = new mongoose.Schema({
     fullName: {
         type: String,
         required: true
-    }, 
+    },
+    userName: {
+        type: String,
+        required: true,
+        unique: true
+    } ,
     email: {
         type: String,
         required: true,
