@@ -1,8 +1,9 @@
 import { RequestHandler } from "express";
 import { User } from "../models/userModels";
-import bcrypt from "bcryptjs"
-import { hashPassword } from "../utils/hashedPassword";
-import { checkPassword } from "../utils/checkPassword";
+import { hashPassword } from "../utils/passwords";
+import { checkPassword } from "../utils/passwords";
+import { generateJWT } from "../utils/jwt";
+import mongoose from "mongoose";
 
 const registerUser:RequestHandler = async (req, res, ) => {
     try {
@@ -24,8 +25,10 @@ const registerUser:RequestHandler = async (req, res, ) => {
             password: hashedPassword
         });
         res.status(201).json(user);
+        return
     } catch (error:any) {
         res.status(500).json({error: error.message});
+        return
     }
 }
 
@@ -48,12 +51,19 @@ const loginUser:RequestHandler = async (req, res) => {
             return;
         }
 
-        //to do jwt
-        res.status(200).json(user);
+        const token = generateJWT(user?._id as mongoose.Types.ObjectId);
+        const {_id, fullName, userName, email: _email, groups} = user
+
+        res.cookie('token', token, {httpOnly: true, secure: true, sameSite: 'none'});
+        res.status(200).json({user:{
+            _id, fullName, userName, email: _email, groups
+        }});
+        return
         
     } catch (error: any) {
         console.error(error)
         res.status(500).json({error: error.message});
+        return
     }
 }
 
