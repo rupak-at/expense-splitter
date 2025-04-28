@@ -16,7 +16,7 @@ app.use(cookieParser());
 connectDB();
 
 app.use("/api/user", userRoutes)
-app.use("/api/", groupRoutes)
+app.use("/api", groupRoutes)
 
 app.listen(4000, () => {
     console.log("Server is running on port 4000");
