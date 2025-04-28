@@ -1,11 +1,11 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import { verifyJWT } from "../utils/jwt";
 
-interface CustomRequest extends Request {
+export interface CustomRequest extends Request {
     userId?: string;
 }
 
-interface jwtPayload {
+export interface jwtPayload {
     _id?: string;
     iat: number;
     exp: number;
