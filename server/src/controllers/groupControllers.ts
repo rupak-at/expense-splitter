@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import { Group } from "../models/groupModels";
-import { CustomRequest } from "../middleware/verifyLogin";
+import { CustomRequest } from "../utils/types";
 
 
 const makeGroup: RequestHandler = async(req: CustomRequest, res) => {

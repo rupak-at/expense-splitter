@@ -1,15 +1,7 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import { verifyJWT } from "../utils/jwt";
+import { CustomRequest, jwtPayload,  } from "../utils/types";
 
-export interface CustomRequest extends Request {
-    userId?: string;
-}
-
-export interface jwtPayload {
-    _id?: string;
-    iat: number;
-    exp: number;
-}
 
 export const verifyLogin:RequestHandler = (req: CustomRequest, res: Response, next: NextFunction) => {
     try {

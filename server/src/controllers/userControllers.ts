@@ -49,6 +49,7 @@ const loginUser:RequestHandler = async (req, res) => {
         if(!isMatched) {
             res.status(400).json({error: "Invalid credentials"});
             return;
+            
         }
 
         const token = generateJWT(user?._id as mongoose.Types.ObjectId);
