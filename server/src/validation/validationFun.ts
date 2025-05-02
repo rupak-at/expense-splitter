@@ -1,6 +1,5 @@
 import { RequestHandler } from "express";
 import { AddingMemberToGroupSchema, GroupCreationSchema, loginSchema, registerSchema } from "./schema";
-import { group } from "console";
 import mongoose from "mongoose";
 
 export const validateRegisterUser: RequestHandler = (req, res, next) => {
@@ -39,6 +38,15 @@ export const addMemberToGroupValidation: RequestHandler = (req, res, next) => {
           res.status(400).json({error:"Validation Error", msg: "Invalid group id" });
           return;
      }
+     const { error } = AddingMemberToGroupSchema.validate(req.body)
+    if (error) {
+         res.status(400).json({error:"Validation Error", msg: error?.details[0].message });
+         return;
+    }
+     next();
+}
+
+export const validateExpense: RequestHandler = (req, res, next) => {
      const { error } = AddingMemberToGroupSchema.validate(req.body)
     if (error) {
          res.status(400).json({error:"Validation Error", msg: error?.details[0].message });
