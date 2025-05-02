@@ -8,6 +8,7 @@ import { Server } from "socket.io";
 import userRoutes from "./routes/userRoutes"
 import groupRoutes from "./routes/groupRoutes"
 import expenseRoutes from "./routes/expenseRoutes"
+import splitRoutes from "./routes/splitRoutes"
 
 
 const app = express();
@@ -28,6 +29,7 @@ connectDB();
 app.use("/api/user", userRoutes)
 app.use("/api", groupRoutes)
 app.use("/api", expenseRoutes)
+app.use("/api", splitRoutes)
 
 server.listen(4000, () => {
     console.log("Server is running on port 4000");
