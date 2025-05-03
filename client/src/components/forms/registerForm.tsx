@@ -9,6 +9,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { AlertCircle, CheckCircle2, Eye, EyeOff } from "lucide-react"
+import { useRegister } from "@/lib/queryProvider/useRegister"
+import { format } from "path"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
 
 const RegisterSchema = z.object({
   fullName: z
@@ -44,7 +48,8 @@ export default function RegisterForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<{ success: boolean; message: string } | null>(null)
   const [passwordVisible, setPasswordVisible] = useState(false)
-
+  const {mutate, isPending, error, isError, isSuccess}  = useRegister()
+  const router = useRouter()
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
@@ -87,25 +92,19 @@ export default function RegisterForm() {
       return
     }
 
-    setIsSubmitting(true)
-
-    // api call
+    mutate(formData as FormData, {
+      onSuccess: () => {
+        router.push("/login")
+        toast.success("Registration successful")
+      }, 
+      onError: () => {
+        toast.error(error?.message || "Registration failed")
+      }
+    })
   }
 
   return (
     <div className="mt-8 rounded-lg bg-white p-8 shadow sm:mx-auto sm:w-full sm:max-w-md">
-      {submitStatus && (
-        <Alert
-          className={`mb-6 ${
-            submitStatus.success
-              ? "border-emerald-500 bg-emerald-50 text-emerald-700"
-              : "border-red-500 bg-red-50 text-red-700"
-          }`}
-        >
-          {submitStatus.success ? <CheckCircle2 className="h-4 w-4" /> : <AlertCircle className="h-4 w-4" />}
-          <AlertDescription>{submitStatus.message}</AlertDescription>
-        </Alert>
-      )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
@@ -189,8 +188,8 @@ export default function RegisterForm() {
         </div>
 
         <div>
-          <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700" disabled={isSubmitting}>
-            {isSubmitting ? "Creating account..." : "Register"}
+          <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700" disabled={isPending}>
+            {isPending ? "Creating account..." : "Register"}
           </Button>
         </div>
       </form>

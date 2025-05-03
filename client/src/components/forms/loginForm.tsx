@@ -10,6 +10,9 @@ import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { AlertCircle, CheckCircle2, Eye, EyeOff, Loader2 } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
+import { useRouter } from "next/navigation"
+import { useLogin } from "@/lib/queryProvider/useLogin"
+import { toast } from "sonner"
 
 const LoginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -25,9 +28,9 @@ export default function LoginForm() {
   })
 
   const [errors, setErrors] = useState<Record<string, string[]>>({})
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState<{ success: boolean; message: string } | null>(null)
   const [passwordVisible, setPasswordVisible] = useState(false)
+  const router = useRouter()
+  const { mutate, isPending, error, isError, isSuccess } = useLogin()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -71,26 +74,20 @@ export default function LoginForm() {
       return
     }
 
-    setIsSubmitting(true)
-    //api call
+    mutate(formData, {
+      onSuccess: () => {
+        router.push("/main")
+        toast.success("Login successful")
+      },
+      onError: () => {
+        toast.error(error?.message || "Login failed")
+      },
+    })
   }
 
   return (
     <Card>
       <CardContent className="pt-6">
-        {submitStatus && (
-          <Alert
-            className={`mb-6 ${
-              submitStatus.success
-                ? "border-emerald-500 bg-emerald-50 text-emerald-700"
-                : "border-red-500 bg-red-50 text-red-700"
-            }`}
-          >
-            {submitStatus.success ? <CheckCircle2 className="h-4 w-4" /> : <AlertCircle className="h-4 w-4" />}
-            <AlertDescription>{submitStatus.message}</AlertDescription>
-          </Alert>
-        )}
-
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <Label htmlFor="email">Email address</Label>
@@ -149,8 +146,8 @@ export default function LoginForm() {
           </div>
 
           <div>
-            <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700" disabled={isSubmitting}>
-              {isSubmitting ? (
+            <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700" disabled={isPending}>
+              {isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Signing in...

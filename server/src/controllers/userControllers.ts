@@ -12,7 +12,7 @@ const registerUser:RequestHandler = async (req, res, ) => {
         const existingUser = await User.findOne({email});
 
         if (existingUser) {
-            res.status(400).json({error: "User already exists"});
+            res.status(400).json({success:false,message: "User already exists"});
             return;
         }
 
@@ -24,10 +24,17 @@ const registerUser:RequestHandler = async (req, res, ) => {
             email,
             password: hashedPassword
         });
-        res.status(201).json(user);
+
+        const nUser = {
+            _id: user._id,
+            fullName: user.fullName,
+            userName: user.userName,
+            email: user.email
+        }
+        res.status(201).json({ success: true, user: nUser, message: "Register Successfully"});
         return
     } catch (error:any) {
-        res.status(500).json({error: error.message});
+        res.status(500).json({success: false,message: error.message});
         return
     }
 }
@@ -40,14 +47,14 @@ const loginUser:RequestHandler = async (req, res) => {
         const user = await User.findOne({email});
 
         if (!user) {
-            res.status(400).json({error: "User does not exist"});
+            res.status(400).json({message: "User does not exist", success: false});
             return;
         }
 
         const isMatched = await checkPassword(password, user.password)
 
         if(!isMatched) {
-            res.status(400).json({error: "Invalid credentials"});
+            res.status(400).json({message: "Invalid credentials", success: false});
             return;
             
         }
@@ -63,7 +70,7 @@ const loginUser:RequestHandler = async (req, res) => {
         
     } catch (error: any) {
         console.error(error)
-        res.status(500).json({error: error.message});
+        res.status(500).json({message: error.message, success: false});
         return
     }
 }
