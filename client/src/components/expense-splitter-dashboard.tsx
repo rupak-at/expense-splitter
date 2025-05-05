@@ -7,6 +7,9 @@ import CreateGroupForm from "@/components/create-group-form"
 import GroupExpenses from "@/components/group-expense"
 import AddExpenseForm from "@/components/add-expense-form"
 import SettlementReport from "@/components/settlement-report"
+import { useSelector } from "react-redux"
+import { User } from "@/utils/type"
+import { useAppSelector } from "@/app/hooks"
 
 const mockUser = {
   id: "user-1",
@@ -65,21 +68,14 @@ const mockSettlement = [
 ]
 
 export default function ExpenseSplitterDashboard() {
-  const [hasGroup, setHasGroup] = useState(false)
+  const {user} = useAppSelector((state) => state.userDetails)
+  // const [hasGroup, setHasGroup] = useState(false)
   const [group, setGroup] = useState<typeof mockGroup | null>(null)
   const [isCreatingGroup, setIsCreatingGroup] = useState(false)
   const [expenses, setExpenses] = useState<typeof mockExpenses>([])
   const [settlement, setSettlement] = useState<typeof mockSettlement | null>(null)
   const [activeTab, setActiveTab] = useState("expenses")
 
-
-  const handleCreateGroup = (groupData: { name: string; description: string; members: string[] }) => {
-    console.log("Creating group with data:", groupData)
-
-    // api call to create group
-  
-   
-  }
 
   const handleAddExpense = (expenseData: { 
     title: string; 
@@ -114,7 +110,7 @@ export default function ExpenseSplitterDashboard() {
   return (
     <div className="space-y-6">
       {/* Group management section */}
-      {hasGroup ? (
+      {user.groups.length > 0 ? (
         <div className="space-y-6">
           {/* Group info header */}
           <div className="bg-white shadow rounded-lg p-6">
@@ -173,8 +169,7 @@ export default function ExpenseSplitterDashboard() {
         </div>
       ) : isCreatingGroup ? (
         <CreateGroupForm
-          onCreateGroup={handleCreateGroup}
-          onCancel={() => setIsCreatingGroup(false)}
+
         />
       ) : (
         <NoGroupView onCreateGroup={() => setIsCreatingGroup(true)} />

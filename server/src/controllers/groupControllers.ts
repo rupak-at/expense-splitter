@@ -1,15 +1,23 @@
 import { RequestHandler } from "express";
 import { Group } from "../models/groupModels";
 import { CustomRequest } from "../utils/types";
+import { User } from "../models/userModels";
 
 
 const makeGroup: RequestHandler = async(req: CustomRequest, res) => {
     try {
         const {groupName, userIds} = req.body;
 
+        const emailIds = await Promise.all(userIds.map(async (email: string) => {
+            const user = await User.findOne({email});
+            return user?._id
+        }))
+
+        const uniqueEmailIds = Array.from(new Set(emailIds));
+
         const group = await Group.create({
             groupName,
-            members: userIds,
+            members: uniqueEmailIds,
             createdBy: req.userId
         })
 

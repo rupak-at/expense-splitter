@@ -5,22 +5,17 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import { X, Plus, Loader2 } from 'lucide-react'
+import { makeGroup } from "@/lib/queryProvider/makeGroup"
+import { toast } from "sonner"
 
-interface CreateGroupFormProps {
-  onCreateGroup: (data: { name: string; description: string; members: string[] }) => void
-  onCancel: () => void
-}
-
-export default function CreateGroupForm({ onCreateGroup, onCancel }: CreateGroupFormProps) {
+export default function CreateGroupForm() {
   const [formData, setFormData] = useState({
     name: "",
-    description: "",
     members: [""] // Start with one empty member field
   })
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const {mutate, isPending} = makeGroup()
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
@@ -46,17 +41,19 @@ export default function CreateGroupForm({ onCreateGroup, onCancel }: CreateGroup
     if (!validateForm()) {
       return
     }
-    
-    setIsSubmitting(true)
-    
-    // Filter out empty member fields
-    const filteredMembers = formData.members.filter(member => member.trim() !== "")
-    
-    onCreateGroup({
-      name: formData.name,
-      description: formData.description,
-      members: filteredMembers
+
+    mutate(formData, {
+      onSuccess: (data) => {
+        console.log(data)
+        
+        toast.success("Group created successfully")
+      },
+      onError: () => {
+        toast.error("Failed to create group")
+      }
     })
+    
+        
   }
 
   const addMemberField = () => {
@@ -118,17 +115,6 @@ export default function CreateGroupForm({ onCreateGroup, onCancel }: CreateGroup
             {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
           </div>
           
-          <div className="space-y-2">
-            <Label htmlFor="group-description">Description (Optional)</Label>
-            <Textarea
-              id="group-description"
-              placeholder="Describe what this group is for"
-              rows={3}
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            />
-          </div>
-          
           <div className="space-y-3">
             <Label>Group Members</Label>
             <p className="text-sm text-gray-500">Add the email addresses of people you want to split expenses with</p>
@@ -171,11 +157,11 @@ export default function CreateGroupForm({ onCreateGroup, onCancel }: CreateGroup
         </CardContent>
         
         <CardFooter className="flex justify-between">
-          <Button variant="outline" onClick={onCancel} type="button">
+          <Button variant="outline"  type="button">
             Cancel
           </Button>
-          <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700" disabled={isSubmitting}>
-            {isSubmitting ? (
+          <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700" disabled={isPending}>
+            {isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Creating...

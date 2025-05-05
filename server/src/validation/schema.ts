@@ -15,7 +15,7 @@ export const loginSchema = Joi.object({
 
 export const GroupCreationSchema = Joi.object({
     groupName: Joi.string().required().min(3).trim(),
-    members: Joi.array().items(Joi.string().hex().length(24)).required(), //to validate mongoose id
+    members: Joi.array().items(Joi.string()).required(), //to validate mongoose id
     createdBy: Joi.string().required()
 })
 
