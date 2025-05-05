@@ -72,19 +72,6 @@ export default function ExpenseSplitterDashboard() {
   const [settlement, setSettlement] = useState<typeof mockSettlement | null>(null)
   const [activeTab, setActiveTab] = useState("expenses")
 
-  // Toggle between having a group and not having a group for demo purposes
-  const toggleGroupStatus = () => {
-    if (hasGroup) {
-      setHasGroup(false)
-      setGroup(null)
-      setExpenses([])
-      setSettlement(null)
-    } else {
-      setHasGroup(true)
-      setGroup(mockGroup)
-      setExpenses(mockExpenses)
-    }
-  }
 
   const handleCreateGroup = (groupData: { name: string; description: string; members: string[] }) => {
     console.log("Creating group with data:", groupData)
@@ -126,16 +113,6 @@ export default function ExpenseSplitterDashboard() {
 
   return (
     <div className="space-y-6">
-      {/* For demo purposes only - toggle between states */}
-      <div className="flex justify-center">
-        <button 
-          onClick={toggleGroupStatus} 
-          className="px-4 py-2 bg-gray-200 rounded-md text-sm text-gray-700 hover:bg-gray-300"
-        >
-          Demo: Toggle Group Status
-        </button>
-      </div>
-
       {/* Group management section */}
       {hasGroup ? (
         <div className="space-y-6">
