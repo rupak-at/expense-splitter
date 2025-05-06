@@ -15,7 +15,7 @@ export default function CreateGroupForm() {
     members: [""] // Start with one empty member field
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const {mutate, isPending} = makeGroup()
+  const {mutate, isPending, error} = makeGroup()
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
@@ -42,11 +42,16 @@ export default function CreateGroupForm() {
       return
     }
 
+    console.log(formData)
+
     mutate(formData, {
       onSuccess: (data) => {
         console.log(data)
         
         toast.success("Group created successfully")
+        //to do
+          //redux 
+          //push to group page
       },
       onError: () => {
         toast.error("Failed to create group")

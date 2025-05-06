@@ -6,7 +6,7 @@ import { User } from "../models/userModels";
 
 const makeGroup: RequestHandler = async(req: CustomRequest, res) => {
     try {
-        const {groupName, userIds} = req.body;
+        const {groupName, members: userIds} = req.body;
 
         const emailIds = await Promise.all(userIds.map(async (email: string) => {
             const user = await User.findOne({email});
@@ -21,7 +21,9 @@ const makeGroup: RequestHandler = async(req: CustomRequest, res) => {
             createdBy: req.userId
         })
 
-        res.status(201).json(group);
+        const newGroup = await Group.findById(group._id).populate("members").select("-__v -password");   
+
+        res.status(201).json(newGroup);
         return
     } catch (error) {
         console.log(error)
