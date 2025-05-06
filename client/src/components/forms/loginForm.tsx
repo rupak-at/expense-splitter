@@ -13,6 +13,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import { useRouter } from "next/navigation"
 import { useLogin } from "@/lib/queryProvider/useLogin"
 import { toast } from "sonner"
+import { useDispatch } from "react-redux"
+import { setUser } from "@/lib/redux/features/userSlice"
 
 const LoginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -30,7 +32,8 @@ export default function LoginForm() {
   const [errors, setErrors] = useState<Record<string, string[]>>({})
   const [passwordVisible, setPasswordVisible] = useState(false)
   const router = useRouter()
-  const { mutate, isPending, error, isError, isSuccess } = useLogin()
+  const { mutate, isPending, error } = useLogin()
+  const dispatch = useDispatch()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -75,9 +78,10 @@ export default function LoginForm() {
     }
 
     mutate(formData, {
-      onSuccess: () => {
+      onSuccess: (data) => {
         router.push("/main")
         toast.success("Login successful")
+        dispatch(setUser(data.user))
       },
       onError: () => {
         toast.error(error?.message || "Login failed")

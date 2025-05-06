@@ -44,7 +44,7 @@ const loginUser:RequestHandler = async (req, res) => {
 
         const {email, password} = req.body
 
-        const user = await User.findOne({email});
+        const user = await User.findOne({email}).populate("groups");
 
         if (!user) {
             res.status(400).json({message: "User does not exist", success: false});
@@ -62,8 +62,8 @@ const loginUser:RequestHandler = async (req, res) => {
         const token = generateJWT(user?._id as mongoose.Types.ObjectId);
         const {_id, fullName, userName, email: _email, groups} = user
 
-        res.cookie('token', token, {httpOnly: true, secure: true, sameSite: 'none'});
-        res.status(200).json({user:{
+        res.cookie('token', token, {httpOnly: true, secure: true, sameSite: 'strict'});
+        res.status(200).json({success: true,user:{
             _id, fullName, userName, email: _email, groups
         }});
         return
