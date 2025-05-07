@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import NoGroupView from "@/components/no-group-view"
 import CreateGroupForm from "@/components/create-group-form"
@@ -9,7 +9,9 @@ import AddExpenseForm from "@/components/add-expense-form"
 import SettlementReport from "@/components/settlement-report"
 import { useSelector } from "react-redux"
 import { User } from "@/utils/type"
-import { useAppSelector } from "@/app/hooks"
+import { useAppDispatch, useAppSelector } from "@/app/hooks"
+import { getGroup } from "@/lib/queryProvider/getGroup"
+import { setGroup } from "@/lib/redux/features/groupSlice"
 
 const mockUser = {
   id: "user-1",
@@ -17,18 +19,7 @@ const mockUser = {
   email: "john@example.com",
 }
 
-const mockGroup = {
-  id: "group-1",
-  name: "Summer Trip 2023",
-  description: "Expenses for our summer trip to the beach",
-  createdAt: "2023-05-15T10:30:00Z",
-  members: [
-    { id: "user-1", name: "John Doe", email: "john@example.com" },
-    { id: "user-2", name: "Jane Smith", email: "jane@example.com" },
-    { id: "user-3", name: "Bob Johnson", email: "bob@example.com" },
-  ],
-  isAdmin: true, // Current user is admin of this group
-}
+
 
 // Mock expenses data
 const mockExpenses = [
@@ -70,11 +61,23 @@ const mockSettlement = [
 export default function ExpenseSplitterDashboard() {
   const {user} = useAppSelector((state) => state.userDetails)
   // const [hasGroup, setHasGroup] = useState(false)
-  const [group, setGroup] = useState<typeof mockGroup | null>(null)
   const [isCreatingGroup, setIsCreatingGroup] = useState(false)
   const [expenses, setExpenses] = useState<typeof mockExpenses>([])
   const [settlement, setSettlement] = useState<typeof mockSettlement | null>(null)
   const [activeTab, setActiveTab] = useState("expenses")
+  const dispatch = useAppDispatch()
+
+
+  const {group} = useAppSelector((state) => state.groupDetails)
+  const {data, isLoading} = getGroup()
+
+  useEffect(() => {
+    if (!isLoading && data) {
+      console.log(data)
+      dispatch(setGroup(data))
+    }
+
+  }, [data, isLoading, dispatch])
 
 
   const handleAddExpense = (expenseData: { 
@@ -110,14 +113,16 @@ export default function ExpenseSplitterDashboard() {
   return (
     <div className="space-y-6">
       {/* Group management section */}
-      {user.groups.length > 0 ? (
-        <div className="space-y-6">
+      {group.members.length > 0 ? (
+        isLoading ? (
+          <div>Loading...</div>
+        ) : (
+          <div className="space-y-6">
           {/* Group info header */}
           <div className="bg-white shadow rounded-lg p-6">
             <div className="flex justify-between items-start">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">{group?.name}</h2>
-                <p className="text-gray-500">{group?.description}</p>
+                <h2 className="text-2xl font-bold text-gray-900">{group?.groupName}</h2>
                 <div className="mt-2 flex items-center text-sm text-gray-500">
                   <span>{group?.members.length} members</span>
                   <span className="mx-2">•</span>
@@ -146,7 +151,7 @@ export default function ExpenseSplitterDashboard() {
                 expenses={expenses} 
                 members={group?.members || []} 
                 onGenerateSettlement={handleGenerateSettlement}
-                isAdmin={group?.isAdmin || false}
+                isAdmin={group?.createdBy === user._id.toString() || false}
               />
             </TabsContent>
 
@@ -167,6 +172,7 @@ export default function ExpenseSplitterDashboard() {
             </TabsContent>
           </Tabs>
         </div>
+        )
       ) : isCreatingGroup ? (
         <CreateGroupForm
 

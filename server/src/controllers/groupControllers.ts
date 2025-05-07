@@ -13,6 +13,8 @@ const makeGroup: RequestHandler = async(req: CustomRequest, res) => {
             return user?._id
         }))
 
+        emailIds.push(req.userId);
+
         const uniqueEmailIds = Array.from(new Set(emailIds));
 
         const group = await Group.create({
@@ -125,4 +127,25 @@ const removeMemberFromGroup: RequestHandler = async(req: CustomRequest, res) => 
     }
 }
 
-export {makeGroup, addMemberToGroup, deleteGroup, removeMemberFromGroup}
+const getGroup: RequestHandler = async(req:CustomRequest, res) => {
+    try {
+
+        const group = await Group.find({members: req.userId}).populate("members").select("-__v -password");
+        console.log(group)
+
+        if (group.length === 0) {
+            res.status(404).json({error: "Group not found"});
+            return;
+        }
+
+        res.status(200).json({group});
+        return
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({error: (error as Error).message});
+        return
+    }
+}
+
+export {makeGroup, addMemberToGroup, deleteGroup, removeMemberFromGroup, getGroup}
