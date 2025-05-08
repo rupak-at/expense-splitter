@@ -1,9 +1,11 @@
 import {configureStore} from "@reduxjs/toolkit"
 import user from "./features/userSlice"
+import group from "./features/groupSlice"
 
 export const store = configureStore({
     reducer: {
-        userDetails: user
+        userDetails: user,
+        groupDetails: group,
     }
 })
 

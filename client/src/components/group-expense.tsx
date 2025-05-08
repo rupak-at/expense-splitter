@@ -103,8 +103,8 @@ export default function GroupExpenses({ expenses, members, onGenerateSettlement,
                     </tr>
                   </thead>
                   <tbody>
-                    {expenses.map((expense) => (
-                      <tr key={expense.id} className="border-b hover:bg-gray-50">
+                    {expenses.map((expense, index) => (
+                      <tr key={expense.id + index} className="border-b hover:bg-gray-50">
                         <td className="py-3 px-4">
                           <div className="font-medium">{expense.title}</div>
                           <div className="text-sm text-gray-500">{expense.description}</div>
