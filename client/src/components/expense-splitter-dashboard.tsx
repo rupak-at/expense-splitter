@@ -7,8 +7,6 @@ import CreateGroupForm from "@/components/create-group-form"
 import GroupExpenses from "@/components/group-expense"
 import AddExpenseForm from "@/components/add-expense-form"
 import SettlementReport from "@/components/settlement-report"
-import { useSelector } from "react-redux"
-import { User } from "@/utils/type"
 import { useAppDispatch, useAppSelector } from "@/app/hooks"
 import { getGroup } from "@/lib/queryProvider/getGroup"
 import { setGroup } from "@/lib/redux/features/groupSlice"
@@ -158,7 +156,7 @@ export default function ExpenseSplitterDashboard() {
             <TabsContent value="add">
               <AddExpenseForm 
                 members={group?.members || []} 
-                currentUserId={mockUser.id}
+                currentUserId={user._id}
                 onAddExpense={handleAddExpense} 
               />
             </TabsContent>

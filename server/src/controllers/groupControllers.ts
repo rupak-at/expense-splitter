@@ -131,7 +131,6 @@ const getGroup: RequestHandler = async(req:CustomRequest, res) => {
     try {
 
         const group = await Group.find({members: req.userId}).populate("members").select("-__v -password");
-        console.log(group)
 
         if (group.length === 0) {
             res.status(404).json({error: "Group not found"});
