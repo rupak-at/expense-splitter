@@ -4,6 +4,7 @@ import "./globals.css";
 import { QueryProvider } from "@/components/QueryProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { ReduxProvider } from "@/lib/redux/ReduxProvider";
+import { PersistProvider } from "@/lib/redux/PersistProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,7 +29,9 @@ export default function RootLayout({children,}: Readonly<{children: React.ReactN
       >
         <QueryProvider>
         <ReduxProvider>
+        <PersistProvider>
           {children}
+        </PersistProvider>
         </ReduxProvider>
         </QueryProvider>
         <Toaster 

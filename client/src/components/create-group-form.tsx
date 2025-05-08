@@ -9,6 +9,8 @@ import { X, Plus, Loader2 } from 'lucide-react'
 import { makeGroup } from "@/lib/queryProvider/makeGroup"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { useAppDispatch } from "@/app/hooks"
+import { setGroup } from "@/lib/redux/features/groupSlice"
 
 export default function CreateGroupForm() {
   const [formData, setFormData] = useState({
@@ -18,7 +20,7 @@ export default function CreateGroupForm() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const {mutate, isPending, error} = makeGroup()
   const router = useRouter()
-
+  const dispatch = useAppDispatch()
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
     
@@ -48,7 +50,7 @@ export default function CreateGroupForm() {
 
     mutate(formData, {
       onSuccess: (data) => {
-        console.log(data)
+        dispatch(setGroup(data))
         router.push("/main")
         toast.success("Group created successfully")
         //to do

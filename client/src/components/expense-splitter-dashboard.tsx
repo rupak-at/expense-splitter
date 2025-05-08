@@ -112,9 +112,7 @@ export default function ExpenseSplitterDashboard() {
     <div className="space-y-6">
       {/* Group management section */}
       {group.members.length > 0 ? (
-        isLoading ? (
-          <div>Loading...</div>
-        ) : (
+
           <div className="space-y-6">
           {/* Group info header */}
           <div className="bg-white shadow rounded-lg p-6">
@@ -171,7 +169,7 @@ export default function ExpenseSplitterDashboard() {
           </Tabs>
         </div>
         )
-      ) : isCreatingGroup ? (
+       : isCreatingGroup ? (
         <CreateGroupForm
 
         />
