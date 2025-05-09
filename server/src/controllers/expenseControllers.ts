@@ -32,13 +32,18 @@ const receiveExpense: RequestHandler = async (req: CustomRequest, res) => {
             group: groupId
         });
 
+        const formatedExp = await Expense.findById(expense._id).populate({
+            path: "paidBy",
+            select: "userName _id"
+        });
+
         group.expenses.push(expense._id);
         await group.save();
 
         // emit socket event here like:
         // io.to(groupId).emit("new-expense", expense);
 
-        res.status(201).json({ message: "Expense added", expense });
+        res.status(201).json({ message: "Expense added", expense: formatedExp });
         return;
 
     } catch (error) {

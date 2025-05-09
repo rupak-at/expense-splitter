@@ -1,0 +1,45 @@
+import { createSlice } from "@reduxjs/toolkit"
+
+
+interface Expense {
+    _id: string;
+    title: string;
+    amount: number;
+    description: string;
+    group: string;
+    paidBy: string;
+    createdAt: string;
+    updatedAt: string;
+}
+const initialState = {
+    expense: [{
+        _id: "",
+        title: "",
+        amount: 0,
+        description: "",
+        group: "",
+        paidBy: {_id: "", userName: ""},
+        createdAt: "",
+        updatedAt: "",        
+    }]
+}
+
+const expenseSlice = createSlice({
+    name: "expense", 
+    initialState, 
+    reducers: {
+        setExpense: (state, action) => {
+
+            if (state.expense[0]._id === ""){
+                state.expense.shift()
+            }
+            state.expense.push(action.payload)
+        },
+        removeExpense: (state) => {
+            state.expense = initialState.expense
+        }
+    }
+})
+
+export const { setExpense, removeExpense } = expenseSlice.actions
+export default expenseSlice.reducer

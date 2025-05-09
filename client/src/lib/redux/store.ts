@@ -3,6 +3,7 @@ import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 import storage from "redux-persist/lib/storage";
 import user from "./features/userSlice"
 import group from "./features/groupSlice"
+import expense from "./features/expenseSlice"
 
 const persistConfig = {
     key: "root",
@@ -12,6 +13,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
     userDetails: user,
     groupDetails: group,
+    expenseDetails : expense
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

@@ -25,7 +25,6 @@ export const AddingMemberToGroupSchema = Joi.object({
 export const ExpenseSchema = Joi.object({
     title: Joi.string().required().min(3).trim(),
     description: Joi.string().required().min(3).trim(),
-    group: Joi.string().hex().length(24).required(),
-    paidBy: Joi.string().hex().length(24).required(),
+    groupId: Joi.string().hex().length(24).required(),
     amount: Joi.number().required(),
 })

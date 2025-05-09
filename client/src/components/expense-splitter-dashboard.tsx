@@ -10,6 +10,9 @@ import SettlementReport from "@/components/settlement-report"
 import { useAppDispatch, useAppSelector } from "@/app/hooks"
 import { getGroup } from "@/lib/queryProvider/getGroup"
 import { setGroup } from "@/lib/redux/features/groupSlice"
+import { addExpense } from "@/lib/queryProvider/addExpense"
+import { setExpense } from "@/lib/redux/features/expenseSlice"
+import { toast } from "sonner"
 
 const mockUser = {
   id: "user-1",
@@ -18,37 +21,6 @@ const mockUser = {
 }
 
 
-
-// Mock expenses data
-const mockExpenses = [
-  {
-    id: "exp-1",
-    title: "Groceries",
-    amount: 120.50,
-    description: "Food for the weekend",
-    paidBy: { id: "user-1", name: "John Doe" },
-    date: "2023-05-16T14:30:00Z",
-    splitAmong: ["user-1", "user-2", "user-3"]
-  },
-  {
-    id: "exp-2",
-    title: "Gas",
-    amount: 45.75,
-    description: "Fuel for the road trip",
-    paidBy: { id: "user-2", name: "Jane Smith" },
-    date: "2023-05-17T10:15:00Z",
-    splitAmong: ["user-1", "user-2", "user-3"]
-  },
-  {
-    id: "exp-3",
-    title: "Restaurant",
-    amount: 89.25,
-    description: "Dinner at seafood place",
-    paidBy: { id: "user-3", name: "Bob Johnson" },
-    date: "2023-05-17T19:45:00Z",
-    splitAmong: ["user-1", "user-2", "user-3"]
-  },
-]
 
 // Mock settlement data
 const mockSettlement = [
@@ -59,8 +31,9 @@ const mockSettlement = [
 export default function ExpenseSplitterDashboard() {
   const {user} = useAppSelector((state) => state.userDetails)
   // const [hasGroup, setHasGroup] = useState(false)
+  const {expense} = useAppSelector((state) => state.expenseDetails)
   const [isCreatingGroup, setIsCreatingGroup] = useState(false)
-  const [expenses, setExpenses] = useState<typeof mockExpenses>([])
+  const [expenses, setExpenses] = useState([])
   const [settlement, setSettlement] = useState<typeof mockSettlement | null>(null)
   const [activeTab, setActiveTab] = useState("expenses")
   const dispatch = useAppDispatch()
@@ -68,6 +41,7 @@ export default function ExpenseSplitterDashboard() {
 
   const {group} = useAppSelector((state) => state.groupDetails)
   const {data, isLoading} = getGroup()
+  const { mutate , data: expenseData, isPending: expenseLoading} = addExpense()
 
   useEffect(() => {
     if (!isLoading && data) {
@@ -78,24 +52,24 @@ export default function ExpenseSplitterDashboard() {
   }, [data, isLoading, dispatch])
 
 
-  const handleAddExpense = (expenseData: { 
-    title: string; 
-    amount: number; 
-    description: string;
-    splitAmong: string[];
-  }) => {
-    const newExpense = {
-      id: `exp-${expenses.length + 1}`,
-      title: expenseData.title,
-      amount: expenseData.amount,
-      description: expenseData.description,
-      paidBy: { id: mockUser.id, name: mockUser.name },
-      date: new Date().toISOString(),
-      splitAmong: expenseData.splitAmong
-    }
+  const handleAddExpense = (expenseData: { title: string; amount: number; description: string;}) => {
 
-    setExpenses([...expenses, newExpense])
-    setActiveTab("expenses")
+    const exp = {...expenseData, groupId: group._id,}
+
+    console.log(expenseData)
+
+    mutate(exp, {
+      onSuccess: (data) => {
+        console.log(data)
+        dispatch(setExpense(data))
+        toast.success("Expense added successfully")
+        setActiveTab("expenses")
+      },
+      onError: () => {
+        console.log("error")
+        toast.error("Failed to add expense")
+      }
+    })
   }
 
   const handleGenerateSettlement = () => {
@@ -144,7 +118,7 @@ export default function ExpenseSplitterDashboard() {
 
             <TabsContent value="expenses">
               <GroupExpenses 
-                expenses={expenses} 
+                expenses={expense} 
                 members={group?.members || []} 
                 onGenerateSettlement={handleGenerateSettlement}
                 isAdmin={group?.createdBy === user._id.toString() || false}

@@ -9,13 +9,14 @@ interface Member {
 }
 
 interface Expense {
-  id: string
+  _id: string
   title: string
   amount: number
   description: string
-  paidBy: { id: string; name: string }
-  date: string
-  splitAmong: string[]
+  paidBy: { _id: string; userName: string },
+  group: string
+  createdAt: string
+  updatedAt: string
 }
 
 interface GroupExpensesProps {
@@ -31,9 +32,9 @@ export default function GroupExpenses({ expenses, members, onGenerateSettlement,
   
   // Format currency
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('ne-NP', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'NPR'
     }).format(amount)
   }
 
@@ -53,7 +54,7 @@ export default function GroupExpenses({ expenses, members, onGenerateSettlement,
         )}
       </div>
       
-      {expenses.length === 0 ? (
+      {(expenses.length === 0 || expenses[0]._id === '') ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-10">
             <ReceiptText className="h-16 w-16 text-gray-400 mb-4" />
@@ -104,19 +105,19 @@ export default function GroupExpenses({ expenses, members, onGenerateSettlement,
                   </thead>
                   <tbody>
                     {expenses.map((expense, index) => (
-                      <tr key={expense.id + index} className="border-b hover:bg-gray-50">
+                      <tr key={expense._id + index} className="border-b hover:bg-gray-50">
                         <td className="py-3 px-4">
                           <div className="font-medium">{expense.title}</div>
                           <div className="text-sm text-gray-500">{expense.description}</div>
                         </td>
                         <td className="py-3 px-4 font-medium">{formatCurrency(expense.amount)}</td>
-                        <td className="py-3 px-4">{expense.paidBy.name}</td>
-                        <td className="py-3 px-4">{new Date(expense.date).toLocaleDateString()}</td>
+                        <td className="py-3 px-4">{expense.paidBy.userName}</td>
+                        <td className="py-3 px-4">{new Date(expense.createdAt).toLocaleDateString()}</td>
                         <td className="py-3 px-4">
                           <div className="text-sm">
-                            {expense.splitAmong.length} people
+                            {/* {expense.splitAmong.length} people */}
                             <span className="text-gray-500 text-xs block">
-                              ({formatCurrency(expense.amount / expense.splitAmong.length)} each)
+                              {/* ({formatCurrency(expense.amount / expense.splitAmong.length)} each) */}
                             </span>
                           </div>
                         </td>

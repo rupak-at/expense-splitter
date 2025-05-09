@@ -6,13 +6,16 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Loader2 } from 'lucide-react'
 
 interface Member {
-  id: string
-  name: string
+  _id: string
+  fullName: string
+  userName: string
   email: string
+  groups: string[]
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 interface AddExpenseFormProps {
@@ -22,7 +25,6 @@ interface AddExpenseFormProps {
     title: string; 
     amount: number; 
     description: string;
-    splitAmong: string[];
   }) => void
 }
 
@@ -31,7 +33,7 @@ export default function AddExpenseForm({ members, currentUserId, onAddExpense }:
     title: "",
     amount: "",
     description: "",
-    splitAmong: members.map(member => member.id) // Default to all members
+    splitAmong: members.map(member => member._id) // Default to all members
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -70,7 +72,6 @@ export default function AddExpenseForm({ members, currentUserId, onAddExpense }:
       title: formData.title,
       amount: parseFloat(formData.amount),
       description: formData.description,
-      splitAmong: formData.splitAmong
     })
     
     // Reset form after submission
@@ -78,7 +79,7 @@ export default function AddExpenseForm({ members, currentUserId, onAddExpense }:
       title: "",
       amount: "",
       description: "",
-      splitAmong: members.map(member => member.id)
+      splitAmong: members.map(member => member._id)
     })
     setIsSubmitting(false)
   }
@@ -104,19 +105,6 @@ export default function AddExpenseForm({ members, currentUserId, onAddExpense }:
     }
   }
 
-  const handleSelectAll = () => {
-    setFormData({
-      ...formData,
-      splitAmong: members.map(member => member.id)
-    })
-  }
-
-  const handleSelectNone = () => {
-    setFormData({
-      ...formData,
-      splitAmong: []
-    })
-  }
 
   return (
     <Card>
@@ -148,7 +136,7 @@ export default function AddExpenseForm({ members, currentUserId, onAddExpense }:
           <div className="space-y-2">
             <Label htmlFor="expense-amount">Amount</Label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">Rs </span>
               <Input
                 id="expense-amount"
                 type="number"
@@ -170,7 +158,7 @@ export default function AddExpenseForm({ members, currentUserId, onAddExpense }:
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="expense-description">Description (Optional)</Label>
+            <Label htmlFor="expense-description">Description</Label>
             <Textarea
               id="expense-description"
               placeholder="Add details about this expense"
@@ -178,46 +166,6 @@ export default function AddExpenseForm({ members, currentUserId, onAddExpense }:
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             />
-          </div>
-          
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <Label>Split Among</Label>
-              <div className="space-x-2">
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={handleSelectAll}
-                >
-                  Select All
-                </Button>
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={handleSelectNone}
-                >
-                  Clear
-                </Button>
-              </div>
-            </div>
-            
-            <div className="space-y-2 border rounded-md p-3">
-              {members.map((member) => (
-                <div key={member.id} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`member-${member.id}`}
-                    checked={formData.splitAmong.includes(member.id)}
-                    onCheckedChange={(checked) => handleSplitToggle(member.id, checked === true)}
-                  />
-                  <Label htmlFor={`member-${member.id}`} className="cursor-pointer">
-                    {member.name} {member.id === currentUserId && "(You)"}
-                  </Label>
-                </div>
-              ))}
-            </div>
-            {errors.splitAmong && <p className="text-sm text-red-500">{errors.splitAmong}</p>}
           </div>
         </CardContent>
         

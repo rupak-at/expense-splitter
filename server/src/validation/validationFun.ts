@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { AddingMemberToGroupSchema, GroupCreationSchema, loginSchema, registerSchema } from "./schema";
+import { AddingMemberToGroupSchema, ExpenseSchema, GroupCreationSchema, loginSchema, registerSchema } from "./schema";
 import mongoose from "mongoose";
 
 export const validateRegisterUser: RequestHandler = (req, res, next) => {
@@ -47,8 +47,8 @@ export const addMemberToGroupValidation: RequestHandler = (req, res, next) => {
 }
 
 export const validateExpense: RequestHandler = (req, res, next) => {
-     const { error } = AddingMemberToGroupSchema.validate(req.body)
-    if (error) {
+     const { error } = ExpenseSchema.validate(req.body)
+     if (error) {
          res.status(400).json({error:"Validation Error", msg: error?.details[0].message });
          return;
     }
