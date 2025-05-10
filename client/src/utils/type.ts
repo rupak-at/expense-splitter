@@ -14,3 +14,10 @@ export interface User {
     createdAt?: Date
     updatedAt?: Date
 }
+
+
+export interface Split {
+    from: string
+    to: string
+    amount: number
+}
