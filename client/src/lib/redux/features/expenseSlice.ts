@@ -30,7 +30,7 @@ const expenseSlice = createSlice({
     reducers: {
         setExpense: (state, action) => {
 
-            if (state.expense[0]._id === ""){
+            if (state.expense[0]._id === "" || undefined){
                 state.expense.shift()
             }
             state.expense.push(action.payload)

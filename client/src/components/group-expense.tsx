@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks"
 import axios, { isAxiosError } from "axios"
 import { useQuery } from "@tanstack/react-query"
 import { fetchExpense } from "@/lib/redux/features/expenseSlice"
+import { Skeleton } from "./ui/skeleton"
 
 interface Member {
   id: string
@@ -58,7 +59,6 @@ const {data, isLoading, error} = useQuery({
   enabled: !!group._id
 })
 const dispatch = useAppDispatch()
-console.log(expenses)
 
 useEffect(() => {
   if (!isLoading && data) {
@@ -101,7 +101,54 @@ if (error) {
       </div>
       {
         isLoading ? (
-          <p>Loading...</p>
+           <>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        {[1, 2, 3].map((i) => (
+          <Card key={i}>
+            <CardContent className="pt-6">
+              <Skeleton className="h-8 w-24 mb-2" />
+              <Skeleton className="h-4 w-32" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+      
+      <Card>
+        <CardHeader>
+          <Skeleton className="h-6 w-32 mb-2" />
+          <Skeleton className="h-4 w-48" />
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b">
+                  <th className="text-left py-3 px-4"><Skeleton className="h-4 w-16" /></th>
+                  <th className="text-left py-3 px-4"><Skeleton className="h-4 w-16" /></th>
+                  <th className="text-left py-3 px-4"><Skeleton className="h-4 w-16" /></th>
+                  <th className="text-left py-3 px-4"><Skeleton className="h-4 w-16" /></th>
+                  <th className="text-left py-3 px-4"><Skeleton className="h-4 w-16" /></th>
+                </tr>
+              </thead>
+              <tbody>
+                {[1, 2, 3, 4].map((i) => (
+                  <tr key={i} className="border-b">
+                    <td className="py-3 px-4">
+                      <Skeleton className="h-5 w-32 mb-1" />
+                      <Skeleton className="h-3 w-24" />
+                    </td>
+                    <td className="py-3 px-4"><Skeleton className="h-5 w-20" /></td>
+                    <td className="py-3 px-4"><Skeleton className="h-5 w-24" /></td>
+                    <td className="py-3 px-4"><Skeleton className="h-5 w-20" /></td>
+                    <td className="py-3 px-4"><Skeleton className="h-5 w-16" /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+    </>
         ) : (
           expenses.length === 0 || expenses[0]._id === '') ? (
             <Card>

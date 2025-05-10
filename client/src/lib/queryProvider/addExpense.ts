@@ -10,7 +10,6 @@ interface AddExpenseBody {
 export const addExpense = () => {
     return useMutation({
         mutationFn : async(body: AddExpenseBody) => {
-            console.log(body)
             try {
                 const {data} = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/expense`, 
                     body

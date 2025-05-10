@@ -53,9 +53,6 @@ export default function CreateGroupForm() {
         dispatch(setGroup(data))
         router.push("/main")
         toast.success("Group created successfully")
-        //to do
-          //redux 
-          //push to group page
       },
       onError: () => {
         toast.error("Failed to create group")

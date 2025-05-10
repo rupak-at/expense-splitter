@@ -64,12 +64,6 @@ const getExpenses: RequestHandler = async (req: CustomRequest, res) => {
             select: "userName _id"
         });
         
-        if (groupExpenses.length === 0) {
-            res.status(404).json({ error: "No expenses found" });
-            return;
-        }
-
-        
         res.status(200).json({ groupExpenses });
         return
         
