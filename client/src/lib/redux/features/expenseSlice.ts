@@ -36,10 +36,13 @@ const expenseSlice = createSlice({
             state.expense.push(action.payload)
         },
         removeExpense: (state) => {
-            state.expense = initialState.expense
+            state.expense = []
+        },
+        fetchExpense: (state, action) => {
+            state.expense = action.payload
         }
     }
 })
 
-export const { setExpense, removeExpense } = expenseSlice.actions
+export const { setExpense, removeExpense, fetchExpense } = expenseSlice.actions
 export default expenseSlice.reducer

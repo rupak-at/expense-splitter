@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import { CustomRequest } from "../utils/types";
 import { Group } from "../models/groupModels";
 import { Expense } from "../models/expenseModels";
+import mongoose from "mongoose";
 
 const receiveExpense: RequestHandler = async (req: CustomRequest, res) => {
     try {
@@ -53,4 +54,29 @@ const receiveExpense: RequestHandler = async (req: CustomRequest, res) => {
     }
 };
 
-export { receiveExpense };
+const getExpenses: RequestHandler = async (req: CustomRequest, res) => {
+    try {
+        const userId = req.userId!;
+        const groupId = req.params.id; 
+
+        const groupExpenses = await Expense.find({group: groupId}).populate({
+            path: "paidBy",
+            select: "userName _id"
+        });
+        
+        if (groupExpenses.length === 0) {
+            res.status(404).json({ error: "No expenses found" });
+            return;
+        }
+
+        
+        res.status(200).json({ groupExpenses });
+        return
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: (error as Error).message });
+        return
+    }
+}
+export { receiveExpense, getExpenses };
