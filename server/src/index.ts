@@ -42,5 +42,12 @@ server.listen(4000, () => {
 
 
 io.on("connection", (socket) => {
-    console.log("User connected: ", socket.id);
+    
+    socket.on("user-online", (id) => {
+        console.log("User online: ", id);
+    })
+
+    socket.on("disconnect", () => {
+        console.log("User disconnected: ", socket.id);
+    })
 })

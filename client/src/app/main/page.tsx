@@ -1,6 +1,14 @@
+"use client"
 import ExpenseSplitterDashboard from "@/components/expense-splitter-dashboard"
+import { useAppSelector } from "../hooks"
+import { useSocketLogin } from "@/lib/socket/useSocketLogin"
 
 export default function DashboardPage() {
+  const {user} = useAppSelector((state) => state.userDetails) 
+
+  if (!(user?._id === "")) {
+    useSocketLogin(user?._id)
+  }
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow">

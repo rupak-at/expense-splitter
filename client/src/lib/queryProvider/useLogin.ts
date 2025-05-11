@@ -1,9 +1,10 @@
+import { Login } from "@/utils/type";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
 export const useLogin = () =>{
     return useMutation({
-        mutationFn: async (body) => {
+        mutationFn: async (body: Login) => {
             try {
                 const {data} = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/user/login`, body, {withCredentials: true})
                 return data

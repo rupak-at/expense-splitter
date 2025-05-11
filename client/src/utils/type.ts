@@ -21,3 +21,8 @@ export interface Split {
     to: string
     amount: number
 }
+
+export interface Login {
+    email: string
+    password: string
+}
