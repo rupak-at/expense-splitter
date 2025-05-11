@@ -88,7 +88,6 @@ if (error) {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Group Expenses</h2>
-        {isAdmin && (
           <Button 
             onClick={onGenerateSettlement}
             disabled={expenses.length === 0}
@@ -97,7 +96,6 @@ if (error) {
             <Calculator className="mr-2 h-4 w-4" />
             See Settlement
           </Button>
-        )}
       </div>
       {
         isLoading ? (

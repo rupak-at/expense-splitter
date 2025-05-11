@@ -70,7 +70,7 @@ const Page = () => {
                       </div>
                     </div>
                     <div className="flex justify-center items-center bg-emerald-100 py-3 rounded-md">
-                      <DollarSign className="h-5 w-5 text-emerald-600" />
+                      <span className="h-5 w-5 text-emerald-600" >Rs.</span>
                       <span className="text-xl font-bold text-emerald-700">{payment.amount}</span>
                     </div>
                   </CardContent>
@@ -88,7 +88,7 @@ const Page = () => {
                     <div className="flex justify-between items-center">
                       <CardTitle className="text-emerald-700">{expense.title}</CardTitle>
                       <div className="bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-                        ${expense.amount}
+                        Rs.{expense.amount}
                       </div>
                     </div>
                     <CardDescription>{expense.description}</CardDescription>
