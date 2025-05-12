@@ -26,3 +26,17 @@ export interface Login {
     email: string
     password: string
 }
+
+export interface Expense {
+    _id: string
+    title: string
+    amount: number
+    description: string
+    group: string
+    paidBy: {
+        userName: string
+        _id: string
+    }
+    createdAt: string
+    updatedAt: string
+}

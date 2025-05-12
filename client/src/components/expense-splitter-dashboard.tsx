@@ -14,6 +14,8 @@ import { setExpense } from "@/lib/redux/features/expenseSlice"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { socket } from "@/lib/socket/SConnection"
+import { Expense } from "@/utils/type"
+import { notify } from "@/utils/notify"
 
 
 export default function ExpenseSplitterDashboard() {
@@ -37,11 +39,30 @@ export default function ExpenseSplitterDashboard() {
 
   }, [data, isLoading, dispatch])
 
-  if (socket.connected) {
-    socket.on("new-expense", (data) => {
-      console.log(data)
-    })
-  }
+useEffect(() => {
+    const handleNewExpense = (data: Expense) => {
+      console.log("Received new-expense data:", data);
+      notify(data?.paidBy.userName, data.amount);
+    };
+
+    const handleConnect = () => {
+      console.log("Socket connected, setting up new-expense listener.");
+      socket.on("new-expense", handleNewExpense);
+    };
+
+    if (socket.connected) {
+      handleConnect();
+    } else {
+      socket.on("connect", handleConnect); // Set up listener for 'connect'
+    }
+
+    return () => {
+      socket.off("new-expense", handleNewExpense);
+      socket.off("connect", handleConnect); // Clean up 'connect' listener as well
+    };
+  }, [socket]);
+
+
 
 
   const handleAddExpense = (expenseData: { title: string; amount: number; description: string;}) => {
