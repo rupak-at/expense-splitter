@@ -13,6 +13,7 @@ import { addExpense } from "@/lib/queryProvider/addExpense"
 import { setExpense } from "@/lib/redux/features/expenseSlice"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { socket } from "@/lib/socket/SConnection"
 
 
 export default function ExpenseSplitterDashboard() {
@@ -36,6 +37,12 @@ export default function ExpenseSplitterDashboard() {
 
   }, [data, isLoading, dispatch])
 
+  if (socket.connected) {
+    socket.on("new-expense", (data) => {
+      console.log(data)
+    })
+  }
+
 
   const handleAddExpense = (expenseData: { title: string; amount: number; description: string;}) => {
 
@@ -46,6 +53,9 @@ export default function ExpenseSplitterDashboard() {
         dispatch(setExpense(data))
         toast.success("Expense added successfully")
         setActiveTab("expenses")
+        if (socket.connected) {
+          socket.emit("new-expense", data, user?._id, group?._id)
+        }
       },
       onError: (error) => {
         console.log("error: ", error)
