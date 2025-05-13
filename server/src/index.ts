@@ -52,10 +52,10 @@ io.on("connection", (socket) => {
         socket.join(groupId);
     })
     
-    socket.on("new-expense", (data) => {
+    socket.on("new-expense", (data, userId, groupId) => {
         users.forEach((value, key) => {
-            if (value === socket.id) {
-                socket.to(key).emit("new-expense", data);
+            if (key === userId) {
+                socket.to(groupId).emit("new-expense", data);
             }
         })
     })

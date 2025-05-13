@@ -41,24 +41,22 @@ export default function ExpenseSplitterDashboard() {
 
 useEffect(() => {
     const handleNewExpense = (data: Expense) => {
-      console.log("Received new-expense data:", data);
       notify(data?.paidBy.userName, data.amount);
     };
 
     const handleConnect = () => {
-      console.log("Socket connected, setting up new-expense listener.");
       socket.on("new-expense", handleNewExpense);
     };
 
     if (socket.connected) {
       handleConnect();
     } else {
-      socket.on("connect", handleConnect); // Set up listener for 'connect'
+      socket.on("connect", handleConnect); 
     }
 
     return () => {
       socket.off("new-expense", handleNewExpense);
-      socket.off("connect", handleConnect); // Clean up 'connect' listener as well
+      socket.off("connect", handleConnect); 
     };
   }, [socket]);
 
