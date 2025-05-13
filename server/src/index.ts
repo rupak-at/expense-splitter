@@ -40,14 +40,31 @@ server.listen(4000, () => {
     console.log("Server is running on port 4000");
 })
 
+const users = new Map();
 
 io.on("connection", (socket) => {
     
     socket.on("user-online", (id) => {
-        console.log("User online: ", id);
+        users.set(id, socket.id);
+    })
+
+    socket.on("join-group", (groupId) => {
+        socket.join(groupId);
+    })
+    
+    socket.on("new-expense", (data, userId, groupId) => {
+        users.forEach((value, key) => {
+            if (key === userId) {
+                socket.to(groupId).emit("new-expense", data);
+            }
+        })
     })
 
     socket.on("disconnect", () => {
-        console.log("User disconnected: ", socket.id);
+        users.forEach((value, key) => {
+            if (value === socket.id) {
+                users.delete(key);
+            }
+        })
     })
 })

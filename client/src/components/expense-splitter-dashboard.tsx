@@ -13,6 +13,9 @@ import { addExpense } from "@/lib/queryProvider/addExpense"
 import { setExpense } from "@/lib/redux/features/expenseSlice"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { socket } from "@/lib/socket/SConnection"
+import { Expense } from "@/utils/type"
+import { notify } from "@/utils/notify"
 
 
 export default function ExpenseSplitterDashboard() {
@@ -36,6 +39,29 @@ export default function ExpenseSplitterDashboard() {
 
   }, [data, isLoading, dispatch])
 
+useEffect(() => {
+    const handleNewExpense = (data: Expense) => {
+      notify(data?.paidBy.userName, data.amount);
+    };
+
+    const handleConnect = () => {
+      socket.on("new-expense", handleNewExpense);
+    };
+
+    if (socket.connected) {
+      handleConnect();
+    } else {
+      socket.on("connect", handleConnect); 
+    }
+
+    return () => {
+      socket.off("new-expense", handleNewExpense);
+      socket.off("connect", handleConnect); 
+    };
+  }, [socket]);
+
+
+
 
   const handleAddExpense = (expenseData: { title: string; amount: number; description: string;}) => {
 
@@ -46,6 +72,9 @@ export default function ExpenseSplitterDashboard() {
         dispatch(setExpense(data))
         toast.success("Expense added successfully")
         setActiveTab("expenses")
+        if (socket.connected) {
+          socket.emit("new-expense", data, user?._id, group?._id)
+        }
       },
       onError: (error) => {
         console.log("error: ", error)
