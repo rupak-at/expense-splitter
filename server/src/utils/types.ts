@@ -9,3 +9,16 @@ export interface jwtPayload {
     iat: number;
     exp: number;
 }
+
+export interface NotificationData {
+    _id: string;
+    title: string;
+    description: string;
+    group: string;
+    expense: string;
+    amount: number;
+    paidBy: {
+        _id: string;
+        userName: string;
+    };
+}

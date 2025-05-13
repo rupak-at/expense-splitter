@@ -10,6 +10,8 @@ import groupRoutes from "./routes/groupRoutes"
 import expenseRoutes from "./routes/expenseRoutes"
 import splitRoutes from "./routes/splitRoutes"
 
+import {saveNotification} from "./utils/saveNotification"
+
 
 const app = express();
 const server = createServer(app);
@@ -53,9 +55,12 @@ io.on("connection", (socket) => {
     })
     
     socket.on("new-expense", (data, userId, groupId) => {
+        console.log(data)
         users.forEach((value, key) => {
             if (key === userId) {
                 socket.to(groupId).emit("new-expense", data);
+            } else {
+                saveNotification(data, key, groupId)
             }
         })
     })
