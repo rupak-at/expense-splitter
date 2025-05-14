@@ -2,6 +2,7 @@
 import ExpenseSplitterDashboard from "@/components/expense-splitter-dashboard"
 import { useAppSelector } from "../hooks"
 import { useSocketLogin } from "@/lib/socket/useSocketLogin"
+import Link from "next/link"
 
 export default function DashboardPage() {
   const {user} = useAppSelector((state) => state.userDetails) 

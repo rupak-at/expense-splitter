@@ -12,6 +12,7 @@ interface INotification extends mongoose.Document {
         userName: string;
     };
     user: mongoose.Types.ObjectId;
+    read: boolean
 }
 
 const notificationSchema: mongoose.Schema<INotification> = new Schema({
@@ -51,6 +52,10 @@ const notificationSchema: mongoose.Schema<INotification> = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User",
         required: true
+    },
+    read: {
+        type: Boolean,
+        default: false
     }
 
 }, {timestamps: true});
