@@ -10,12 +10,15 @@ import groupRoutes from "./routes/groupRoutes"
 import expenseRoutes from "./routes/expenseRoutes"
 import splitRoutes from "./routes/splitRoutes"
 
+import {saveNotification} from "./utils/saveNotification"
+import e from "express";
+
 
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {
     cors:{
-        origin: "http://localhost:3000",
+        origin: ["http://localhost:3000", "http://localhost:3001"], 
         methods: ["GET", "POST"],
         credentials: true
     }
@@ -52,12 +55,16 @@ io.on("connection", (socket) => {
         socket.join(groupId);
     })
     
-    socket.on("new-expense", (data, userId, groupId) => {
-        users.forEach((value, key) => {
-            if (key === userId) {
-                socket.to(groupId).emit("new-expense", data);
-            }
-        })
+    socket.on("new-expense", async (data, userId, groupId) => {
+
+        const onlineIds = users.keys()
+        const Ids = []
+        for (const ids of onlineIds) {
+            Ids.push(ids)
+        }
+        socket.to(groupId).emit("new-expense", data);
+
+        saveNotification(data, Ids, groupId)
     })
 
     socket.on("disconnect", () => {
