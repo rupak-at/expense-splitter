@@ -9,9 +9,9 @@ import userRoutes from "./routes/userRoutes"
 import groupRoutes from "./routes/groupRoutes"
 import expenseRoutes from "./routes/expenseRoutes"
 import splitRoutes from "./routes/splitRoutes"
+import notificationRoutes from "./routes/notificationRoutes"
 
 import {saveNotification} from "./utils/saveNotification"
-import e from "express";
 
 
 const app = express();
@@ -38,6 +38,7 @@ app.use("/api/user", userRoutes)
 app.use("/api", groupRoutes)
 app.use("/api", expenseRoutes)
 app.use("/api", splitRoutes)
+app.use("/api", notificationRoutes)
 
 server.listen(4000, () => {
     console.log("Server is running on port 4000");
