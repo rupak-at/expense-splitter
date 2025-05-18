@@ -17,7 +17,7 @@ const receiveExpense: RequestHandler = async (req: CustomRequest, res) => {
         }
 
         const isMember = group.members.some(memberId =>
-            memberId.toString() === userId.toString()
+            memberId?.toString() === userId.toString()
         );
 
         if (!isMember) {

@@ -75,4 +75,16 @@ const loginUser:RequestHandler = async (req, res) => {
     }
 }
 
-export {registerUser, loginUser}
+const logoutUser:RequestHandler = async (req, res) => {
+    try {
+        res.clearCookie('token');
+        res.status(200).json({success: true, message: "Logout Successfully"});
+        return
+    } catch (error: any) {
+        console.error(error)
+        res.status(500).json({message: error.message, success: false});
+        return
+    }
+}
+
+export {registerUser, loginUser, logoutUser}

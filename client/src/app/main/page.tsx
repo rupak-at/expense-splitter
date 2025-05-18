@@ -15,7 +15,12 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Expense Splitter</h1>
+          <div className="flex justify-between w-full items-center">
+            <h1 className="text-3xl font-bold tracking-tight text-gray-900">Expense Splitter</h1>
+            <div className="flex p-2 bg-emerald-700 text-white hover:bg-emerald-600 rounded-lg items-center justify-center">
+              Logout
+            </div>
+          </div>
         </div>
       </header>
       <main>
