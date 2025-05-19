@@ -2,7 +2,7 @@
 
 import { useAppSelector } from "@/app/hooks";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getSplit } from "@/lib/queryProvider/getSplit";
+import { useGetSplit } from "@/lib/queryProvider/getSplit";
 import { Split } from "@/utils/type";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -17,7 +17,7 @@ import Link from "next/link";
 
 const Page = () => {
   const { group } = useAppSelector((state) => state.groupDetails);
-  const { data, isLoading } = getSplit(group?._id);
+  const { data, isLoading } = useGetSplit(group?._id);
   const { expense } = useAppSelector((state) => state.expenseDetails);
 
   if (!isLoading && data) {

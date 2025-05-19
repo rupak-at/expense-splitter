@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { X, Plus, Loader2 } from 'lucide-react'
-import { makeGroup } from "@/lib/queryProvider/makeGroup"
+import { useMakeGroup } from "@/lib/queryProvider/makeGroup"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { useAppDispatch } from "@/app/hooks"
@@ -18,7 +18,7 @@ export default function CreateGroupForm() {
     members: [""] // Start with one empty member field
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const {mutate, isPending, error} = makeGroup()
+  const {mutate, isPending, error} = useMakeGroup()
   const router = useRouter()
   const dispatch = useAppDispatch()
   const validateForm = () => {

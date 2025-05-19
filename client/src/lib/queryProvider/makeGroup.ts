@@ -5,7 +5,7 @@ interface GroupBody {
     members: string[];
   }
 
-export const makeGroup = () => {
+export const useMakeGroup = () => {
     return useMutation({
         mutationFn: async (body: GroupBody) => {
             try {

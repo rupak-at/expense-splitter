@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 
-export const getGroup = () => {
+export const useGetGroup = () => {
     return useQuery({
         queryKey: ["group"],
         queryFn: async () => {

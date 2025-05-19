@@ -7,7 +7,7 @@ interface AddExpenseBody {
     groupId: string
 }
 
-export const addExpense = () => {
+export const useAddExpense = () => {
     return useMutation({
         mutationFn : async(body: AddExpenseBody) => {
             try {

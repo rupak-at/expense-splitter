@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { Group } from "../models/groupModels";
 import {Notification} from "../models/notificationModel"
 import {NotificationData} from "./types"

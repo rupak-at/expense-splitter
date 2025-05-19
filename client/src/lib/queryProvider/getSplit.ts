@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios";
 
-export const getSplit = (id: string) => {
+export const useGetSplit = (id: string) => {
     return useQuery({
         queryKey: ["split", id],
         queryFn: async () => {

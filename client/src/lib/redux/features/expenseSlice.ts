@@ -1,16 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 
 
-interface Expense {
-    _id: string;
-    title: string;
-    amount: number;
-    description: string;
-    group: string;
-    paidBy: string;
-    createdAt: string;
-    updatedAt: string;
-}
 const initialState = {
     expense: [{
         _id: "",
