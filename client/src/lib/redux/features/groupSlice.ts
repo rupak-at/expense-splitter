@@ -19,9 +19,20 @@ const groupSlice = createSlice({
     reducers: {
         setGroup: (state, action) => {
             state.group = action.payload
+        },
+        removeGroup: (state) => {
+            state.group = {
+                _id: "",
+                groupName: "",
+                members: [],
+                expenses: [],
+                createdBy: "",
+                createdAt: "",
+                updatedAt: "",
+            }
         }
     }
 })
 
-export const {setGroup} = groupSlice.actions
+export const {setGroup, removeGroup} = groupSlice.actions
 export default groupSlice.reducer

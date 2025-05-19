@@ -1,24 +1,24 @@
 "use client"
 import ExpenseSplitterDashboard from "@/components/expense-splitter-dashboard"
-import { useAppSelector } from "../hooks"
+import { useAppDispatch, useAppSelector } from "../hooks"
 import { useSocketLogin } from "@/lib/socket/useSocketLogin"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useLogout } from "@/lib/queryProvider/logout"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
+import { removeUser } from "@/lib/redux/features/userSlice"
+import { removeGroup } from "@/lib/redux/features/groupSlice"
+import { removeExpense } from "@/lib/redux/features/expenseSlice"
 
 export default function DashboardPage() {
   const {user} = useAppSelector((state) => state.userDetails) 
   const {group} = useAppSelector((state) => state.groupDetails)
-  const [log, setLog ] = useState(false)
   const [loadinglogout, setLoadingLogout] = useState(false)
   const router = useRouter()
-
-
-  if (!(user?._id === "") || !(group?._id === "")) {
-    useSocketLogin(user?._id, group?._id)
-  }
+  const dispatch = useAppDispatch()
+  useSocketLogin(user?._id, group?._id)
+  
 
   const { logout, logoutQuery } = useLogout()
 
@@ -36,7 +36,11 @@ export default function DashboardPage() {
     }
 
     if (isLogout) {
+
       setLoadingLogout(false)
+      dispatch(removeUser())
+      dispatch(removeGroup())
+      dispatch(removeExpense())
       router.push("/login")
       toast.success("Logout successful")
     }

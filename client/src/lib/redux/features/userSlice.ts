@@ -16,9 +16,18 @@ const useSlice = createSlice({
     reducers: {
         setUser: (state, action) => {
             state.user = action.payload
+        },
+        removeUser: (state) => {
+            state.user = {
+                _id: '',
+                fullName: '',
+                email: '',
+                userName: '',
+                groups: []
+            }
         }
     }
 })
 
-export const { setUser } = useSlice.actions
+export const { setUser, removeUser } = useSlice.actions
 export default useSlice.reducer
