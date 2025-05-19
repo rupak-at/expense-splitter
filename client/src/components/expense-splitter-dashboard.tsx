@@ -7,9 +7,9 @@ import CreateGroupForm from "@/components/create-group-form"
 import GroupExpenses from "@/components/group-expense"
 import AddExpenseForm from "@/components/add-expense-form"
 import { useAppDispatch, useAppSelector } from "@/app/hooks"
-import { getGroup } from "@/lib/queryProvider/getGroup"
+import { useGetGroup } from "@/lib/queryProvider/getGroup"
 import { setGroup } from "@/lib/redux/features/groupSlice"
-import { addExpense } from "@/lib/queryProvider/addExpense"
+import { useAddExpense } from "@/lib/queryProvider/addExpense"
 import { setExpense } from "@/lib/redux/features/expenseSlice"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
@@ -28,8 +28,8 @@ export default function ExpenseSplitterDashboard() {
 
 
   const {group} = useAppSelector((state) => state.groupDetails)
-  const {data, isLoading} = getGroup()
-  const { mutate , data: expenseData, isPending: expenseLoading} = addExpense()
+  const {data, isLoading} = useGetGroup()
+  const { mutate , data: expenseData, isPending: expenseLoading} = useAddExpense()
   const router = useRouter()
 
   useEffect(() => {
