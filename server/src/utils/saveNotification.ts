@@ -9,7 +9,7 @@ export const saveNotification = async (data: NotificationData ,userIds: string[]
             console.error("Group not found");
             return;
         }
-        const offlineGroupUsers = group.members.filter((mi) => userIds.includes(mi.toString()))
+        const offlineGroupUsers = group.members.filter((mi) => !userIds.includes(mi.toString()))
 
         const notificationPromises = offlineGroupUsers.map(async(userId) => {
             return await Notification.create({
