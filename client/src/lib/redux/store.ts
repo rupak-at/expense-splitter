@@ -4,6 +4,7 @@ import storage from "redux-persist/lib/storage";
 import user from "./features/userSlice"
 import group from "./features/groupSlice"
 import expense from "./features/expenseSlice"
+import notification from "./features/notificationSlice"
 
 const persistConfig = {
     key: "root",
@@ -13,7 +14,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
     userDetails: user,
     groupDetails: group,
-    expenseDetails : expense
+    expenseDetails : expense,
+    notificationDetails: notification
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

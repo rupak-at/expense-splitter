@@ -2,7 +2,7 @@
 import ExpenseSplitterDashboard from "@/components/expense-splitter-dashboard"
 import { useAppDispatch, useAppSelector } from "../hooks"
 import { useSocketLogin } from "@/lib/socket/useSocketLogin"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useLogout } from "@/lib/queryProvider/logout"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -10,14 +10,44 @@ import { toast } from "sonner"
 import { removeUser } from "@/lib/redux/features/userSlice"
 import { removeGroup } from "@/lib/redux/features/groupSlice"
 import { removeExpense } from "@/lib/redux/features/expenseSlice"
+import { useGetNotification } from "@/lib/queryProvider/getNotification"
+import { setNotificationFalse, setNotificationTrue } from "@/lib/redux/features/notificationSlice"
 
 export default function DashboardPage() {
   const {user} = useAppSelector((state) => state.userDetails) 
   const {group} = useAppSelector((state) => state.groupDetails)
+  const {isNotificationShown} = useAppSelector((state) => state.notificationDetails)
+
   const [loadinglogout, setLoadingLogout] = useState(false)
   const router = useRouter()
   const dispatch = useAppDispatch()
   useSocketLogin(user?._id, group?._id)
+  const {data: notification, error, isSuccess} = useGetNotification(user?._id)
+
+  useEffect(() => {
+    if (error && !isNotificationShown) {
+      toast.success('No Expenses Been Added Yet. Since You Gone', {
+        style: {
+          border: '1px solid #713200',
+          padding: '16px',
+          color: '#713200',
+        },
+      });
+      dispatch(setNotificationTrue())
+    }
+    if (notification.length > 0 && !isNotificationShown) {
+      toast.warning(`New ${notification.length} Expenses Added`, {
+        style: {
+          border: '1px solid #713200',
+          padding: '16px',
+          color: '#713200',
+        },
+      })
+      dispatch(setNotificationTrue())
+    }
+
+  },[error,notification , isSuccess])
+
   
 
   const { logout, logoutQuery } = useLogout()
@@ -41,6 +71,7 @@ export default function DashboardPage() {
       dispatch(removeUser())
       dispatch(removeGroup())
       dispatch(removeExpense())
+      dispatch(setNotificationFalse())
       router.push("/login")
       toast.success("Logout successful")
     }
