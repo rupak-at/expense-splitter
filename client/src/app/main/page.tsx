@@ -35,7 +35,7 @@ export default function DashboardPage() {
       });
       dispatch(setNotificationTrue())
     }
-    if (notification.length > 0 && !isNotificationShown) {
+    if (notification?.length > 0 && !isNotificationShown) {
       toast.warning(`New ${notification.length} Expenses Added`, {
         style: {
           border: '1px solid #713200',
