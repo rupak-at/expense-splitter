@@ -9,10 +9,10 @@ A full-stack group expense-sharing web application that helps users manage share
 - 👥 Group Management (Create, Delete, Add/Remove Members)
 - 💵 Expense Tracking (Add Expenses to Groups)
 - 📊 Expense Splitting Logic (Calculates who owes whom)
-- 📡 Real-time Notifications with Socket.IO (Upcoming)
+- 📡 Real-time Notifications with Socket.IO 
 - ✅ Input Validation using Zod
 - 🔐 Protected Routes using JWT Middleware
-- 🎯 Clean UI with Tailwind CSS (Upcoming)
+- 🎯 Clean UI with Tailwind CSS 
 
 ---
 ## 🔧 Tech Stack
@@ -34,4 +34,5 @@ A full-stack group expense-sharing web application that helps users manage share
 - JWT (Authentication)
 - Zod (Validation)
 - Socket.IO Server
+- Redis for storing online user
 
