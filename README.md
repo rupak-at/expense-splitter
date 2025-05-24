@@ -1,3 +1,6 @@
+### MVP completed
+Actively developing a backend refactor using MySQL for deeper RDBMS expertise.
+---
 # 💸 Expense Splitter App
 
 A full-stack group expense-sharing web application that helps users manage shared costs and split expenses easily among group members. Built with **MERN Stack** (MongoDB, Express, React, Node.js), **TypeScript**, **Tailwind CSS**, and **Socket.IO** for real-time updates.
